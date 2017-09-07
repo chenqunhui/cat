@@ -43,9 +43,12 @@ public class SmsSender extends AbstractSender {
 		String content = message.getTitle() + " " + filterContent;
 		String urlPrefix = sender.getUrl();
 		String urlPars = m_senderConfigManager.queryParString(sender);
-
-		//fix 
-		urlPars +="?UserName=bbsbj&UserPass=baobaoshu!57&Mobile=${receiver}&Content=${content}";
+		try{
+			while(urlPars.contains("${and}"))
+				urlPars = urlPars.replace("${and}", "&");
+		}catch (Exception e) {
+			Cat.logError(e);
+		}
 		try {
 			urlPars = urlPars.replace("${receiver}", URLEncoder.encode(receiver, "utf-8")).replace("${content}",
 			      URLEncoder.encode(content, "utf-8"));
